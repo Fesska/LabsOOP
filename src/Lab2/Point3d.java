@@ -2,18 +2,13 @@ package Lab2;
 /**
  * класс трехмерной точки.
  **/
-public class Point3d {
-    /** Координата X **/
-    private double pointX;
-    /** Координата Y **/
-    private double pointY;
+public class Point3d extends Point2d{
     /** Координата Z **/
     private double pointZ;
     /** Конструктор инициализации **/
     public Point3d(double x, double y, double z)
     {
-        pointX = x;
-        pointY = y;
+        super(x, y);
         pointZ = z;
     }
     /** Конструктор по умолчанию. **/
@@ -21,33 +16,27 @@ public class Point3d {
     {
         this(0, 0, 0);
     }
-    /** Возвращение координаты X **/
-    public double getPointX() {
-        return pointX;
-    }
-    /** Возвращение координаты X **/
-    public double getPointY() {
-        return pointY;
-    }
-    /** Возвращение координаты X **/
-    public double getPointZ() {
+    /** Возвращение координаты Z **/
+    public double getZ() {
         return pointZ;
     }
-    /** Установка значения координаты X. **/
-    public void setPointX(double x) {
-        this.pointX = x;
-    }
-    /** Установка значения координаты X. **/
-    public void setPointY(double y) {
-        this.pointY = y;
-    }
-    /** Установка значения координаты X. **/
-    public void setPointZ(double z) {
+    /** Установка значения координаты Z **/
+    public void setZ(double z) {
         this.pointZ = z;
     }
-    public double distanceTo(Point3d point1, Point3d point2)
+    /** Сравнение точек **/
+    public boolean equals(Point3d newPoint)
     {
-        return 0;
-        //TODO
+        return (this.getX() == newPoint.getX() &&
+                this.getY() == newPoint.getY() &&
+                this.getZ() == newPoint.getZ());
     }
+    /** Вычисление расстояния **/
+    public double distanceTo(Point3d nPoint)
+    {
+        return Math.sqrt(Math.pow((nPoint.getX() - this.getX()),2) +
+                         Math.pow((nPoint.getY() - this.getY()),2) +
+                         Math.pow((nPoint.getZ() - this.getZ()),2));
+    }
+
 }
