@@ -1,5 +1,6 @@
 package Lab2;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main
@@ -9,31 +10,25 @@ public class Main
         Scanner input = new Scanner(System.in);
 
         //Вводим точку А
-        System.out.println("Введите координату х точки А: ");
-        double x1 = input.nextDouble();
-        System.out.println("Введите координату y точки А: ");
-        double y1 = input.nextDouble();
-        System.out.println("Введите координату z точки А: ");
-        double z1 = input.nextDouble();
-        Point3d A = new Point3d(x1, y1, z1);
+        System.out.println("Введите координаты точки A (через пробел): ");
+        String lineA = input.nextLine();
+        String [] elementsA = lineA.split(" ");
+        double [] arrayA = Arrays.stream(elementsA).mapToDouble(Double::parseDouble).toArray();
+        Point3d A = new Point3d(arrayA[0], arrayA[1], arrayA[2]);
 
         //Вводим точку B
-        System.out.println("Введите координату х точки B: ");
-        double x2 = input.nextDouble();
-        System.out.println("Введите координату y точки B: ");
-        double y2 = input.nextDouble();
-        System.out.println("Введите координату z точки B: ");
-        double z2 = input.nextDouble();
-        Point3d B = new Point3d(x2, y2, z2);
+        System.out.println("Введите координаты точки B (через пробел): ");
+        String lineB = input.nextLine();
+        String [] elementsB = lineB.split(" ");
+        double [] arrayB = Arrays.stream(elementsB).mapToDouble(Double::parseDouble).toArray();
+        Point3d B = new Point3d(arrayB[0], arrayB[1], arrayB[2]);
 
         //Вводим точку C
-        System.out.println("Введите координату х точки C: ");
-        double x3 = input.nextDouble();
-        System.out.println("Введите координату y точки C: ");
-        double y3 = input.nextDouble();
-        System.out.println("Введите координату z точки C: ");
-        double z3 = input.nextDouble();
-        Point3d C = new Point3d(x3, y3, z3);
+        System.out.println("Введите координаты C (через пробел): ");
+        String lineC = input.nextLine();
+        String [] elementsC = lineC.split(" ");
+        double [] arrayC = Arrays.stream(elementsC).mapToDouble(Double::parseDouble).toArray();
+        Point3d C = new Point3d(arrayC[0], arrayC[1], arrayC[2]);
 
         //Проверяем, введены ли одинаковые точки
         if (A.equals(B) || A.equals(C) || B.equals(C)) {
