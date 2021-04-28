@@ -1,4 +1,4 @@
-package Lab4;
+package Lab45;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +40,7 @@ public class JImageDisplay extends JComponent
             }
         }
     }
+
 
     public BufferedImage getImage()
     {
