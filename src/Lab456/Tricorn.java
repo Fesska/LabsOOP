@@ -1,8 +1,8 @@
-package Lab45;
+package Lab456;
 
 import java.awt.geom.Rectangle2D;
 
-public class Mandelbrot extends FractalGenerator
+public class Tricorn extends FractalGenerator
 {
     public static final int MAX_ITERATIONS = 2000;
 
@@ -10,9 +10,9 @@ public class Mandelbrot extends FractalGenerator
     public void getInitialRange(Rectangle2D.Double range)
     {
         range.x = -2;
-        range.y = -1.5;
-        range.height = 3;
-        range.width = 3;
+        range.y = -2;
+        range.width = 4;
+        range.height = 4;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Mandelbrot extends FractalGenerator
             count++;
 
             double k = r * r - i * i + x;
-            double m = 2 * r * i + y;
+            double m = (-2) * r * i + y;
             r = k;
             i = m;
 
@@ -40,6 +40,6 @@ public class Mandelbrot extends FractalGenerator
 
     @Override
     public String toString() {
-        return "Mandelbrot";
+        return "Tricorn";
     }
 }

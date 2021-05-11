@@ -1,4 +1,4 @@
-package Lab45;
+package Lab456;
 
 import javax.swing.*;
 import java.awt.*;

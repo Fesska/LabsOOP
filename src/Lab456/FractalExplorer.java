@@ -1,4 +1,4 @@
-package Lab45;
+package Lab456;
 
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -15,6 +15,10 @@ public class FractalExplorer
     private FractalGenerator fractalGenerator;  // используемый для отображения фрактал
     private Rectangle2D.Double range;   // диапазон комплексной плоскости для вывода
     private JComboBox comboBox;
+    private JButton buttonReset;
+    private JButton buttonSave;
+    private int rowsRemaining;
+
 
     public static void main(String[] args)
     {
@@ -35,8 +39,8 @@ public class FractalExplorer
     public void createAndShowGUI()
     {
         JFrame frame = new JFrame("Fractal Generator");     // создаем окно
-        JButton buttonReset = new JButton("Reset");      // кнопка для сброса
-        JButton buttonSave = new JButton("Save");
+        buttonReset = new JButton("Reset");      // кнопка для сброса
+        buttonSave = new JButton("Save");
         JPanel panelNorth = new JPanel();
         JPanel panelSouth = new JPanel();
         JLabel label = new JLabel("Fractal:");
@@ -78,23 +82,21 @@ public class FractalExplorer
 
     private void drawFractal()
     {
-        for (int x = 0; x < displaySize; x++)
+        //Отключение интерфейса на момент рисования фрактала
+        enableUI(false);
+        rowsRemaining = displaySize;
+        for (int i = 0; i < displaySize; i++)
         {
-            for (int y = 0; y < displaySize; y++)
-            {
-                int counter = fractalGenerator.numIterations(FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, x),
-                                                            fractalGenerator.getCoord(range.y, range.y + range.width, displaySize, y));
-                if (counter == -1) {
-                    imageDisplay.drawPixel(x, y, 0);
-                }
-                else {
-                    float hue = 0.7f + (float) counter / 200f;
-                    int rgbColor = Color.HSBtoRGB(hue, 1f, 1f);
-                    imageDisplay.drawPixel(x, y, rgbColor);
-                }
-            }
+            FractalWorker drawRow = new FractalWorker(i);
+            drawRow.execute();;
         }
-        imageDisplay.repaint();
+    }
+
+    public void enableUI(boolean isEnabled)
+    {
+        buttonReset.setEnabled(isEnabled);
+        buttonSave.setEnabled(isEnabled);
+        comboBox.setEnabled(isEnabled);
     }
 
     public class ActionHandler implements ActionListener
@@ -133,10 +135,61 @@ public class FractalExplorer
         @Override
         public void mouseClicked(MouseEvent e)      // обработчик события клика по изображению
         {
-            double x = FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, e.getX());
-            double y = FractalGenerator.getCoord(range.y, range.y + range.width, displaySize, e.getY());
-            fractalGenerator.recenterAndZoomRange(range, x, y, 0.5);
-            drawFractal();
+            if (rowsRemaining == 0)
+            {
+                double x = FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, e.getX());
+                double y = FractalGenerator.getCoord(range.y, range.y + range.width, displaySize, e.getY());
+                fractalGenerator.recenterAndZoomRange(range, x, y, 0.5);
+                drawFractal();
+            }
+        }
+    }
+
+    private class FractalWorker extends SwingWorker<Object, Object>
+    {
+        private int yCoord;
+        private int[] rgb;  //Полоса пикселей
+
+        public FractalWorker(int y)
+        {
+            this.yCoord = y;
+        }
+
+        @Override
+        protected Object doInBackground() throws Exception
+        {
+            rgb = new int[displaySize]; //Выделяем памяти на длину полосы
+
+            for (int i = 0; i < displaySize; i++)
+            {
+                int counter = fractalGenerator.numIterations(FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, i),
+                        fractalGenerator.getCoord(range.y, range.y + range.width, displaySize, yCoord));
+
+                //Теперь вместо рисования кладем значения цвета пикселя в строке в массив
+                if (counter == -1) {
+                    rgb[i] = 0;
+                } else {
+                    float hue = 0.7f + (float) counter / 200f;
+                    int rgbColor = Color.HSBtoRGB(hue, 1f, 1f);
+                    rgb[i] = rgbColor;
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void done()
+        {
+            // Рисуем полосу
+            for (int i = 0; i < displaySize; i++)
+            {
+                imageDisplay.drawPixel(i, yCoord, rgb[i]);
+            }
+
+            imageDisplay.repaint(0,0,yCoord,displaySize,1);
+            rowsRemaining--;
+            if (rowsRemaining == 0) enableUI(true);
         }
     }
 }
